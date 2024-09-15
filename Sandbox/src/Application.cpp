@@ -1,4 +1,5 @@
 #include <GL/glew.h> //To include glew, must include it before glfw3.h
+#include <GLFW/glfw3.h>
 #include "GlfwFunctions.h"
 #include <iostream>
 
@@ -27,6 +28,15 @@ int main() {
 
 static void init() {
     GLFWFunctions::init(1600, 900, "Hello World");
+    GLenum glewInitResult = glewInit();
+    if (glewInitResult != GLEW_OK) {
+        std::cerr << "Failed to initialize GLEW: "
+            << glewGetErrorString(glewInitResult) << std::endl;
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+
+    std::cout << "GLEW initialized successfully" << std::endl;
 }
 
 static void update() {
