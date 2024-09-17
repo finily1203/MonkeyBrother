@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include <iostream>
 #include <vector>
+
 Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
     : m_IsCompiled(false) {
     GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexSrc);
@@ -46,6 +47,11 @@ void Shader::Unbind() const {
     glUseProgram(0);
 }
 
+void Shader::SetUniform1i(const std::string& name, int value) {
+    GLint location = GetUniformLocation(name);
+    glUniform1i(location, value);
+}
+
 GLuint Shader::CompileShader(GLenum type, const std::string& source) {
     GLuint id = glCreateShader(type);
     const char* src = source.c_str();
@@ -68,4 +74,12 @@ GLuint Shader::CompileShader(GLenum type, const std::string& source) {
     }
 
     return id;
+}
+
+GLint Shader::GetUniformLocation(const std::string& name) {
+    GLint location = glGetUniformLocation(m_ShaderID, name.c_str());
+    if (location == -1) {
+        std::cerr << "Warning: Uniform '" << name << "' not found!" << std::endl;
+    }
+    return location;
 }

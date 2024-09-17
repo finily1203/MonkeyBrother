@@ -1,35 +1,35 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <memory>  
+#include <memory>
 
 class Shader;
 
 class GraphicsSystem {
 public:
-   
+    
     GraphicsSystem();
 
    
     ~GraphicsSystem();
 
-   
-    GraphicsSystem(const GraphicsSystem& other);             
-    GraphicsSystem& operator=(const GraphicsSystem& other);  
-    GraphicsSystem(GraphicsSystem&& other) noexcept;         
-    GraphicsSystem& operator=(GraphicsSystem&& other) noexcept;  
+    GraphicsSystem(const GraphicsSystem& other);            
+    GraphicsSystem& operator=(const GraphicsSystem& other); 
+    GraphicsSystem(GraphicsSystem&& other) noexcept;        
+    GraphicsSystem& operator=(GraphicsSystem&& other) noexcept; 
 
-   
-    void Initialize();
-    void Update();
-    void Render();
-    void Cleanup();
+    // Public methods
+    void Initialize();  
+    void Update();      
+    void Render();      
+    void Cleanup();     
 
 private:
-    GLuint m_VAO;  
-    GLuint m_VBO; 
+    GLuint m_VAO;     
+    GLuint m_VBO;      
+    GLuint m_Texture;  
     std::unique_ptr<Shader> m_Shader;  
 
-   
+    
     void ReleaseResources();
 };
