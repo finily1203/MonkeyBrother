@@ -1,24 +1,21 @@
 #pragma once
 
+#include <GL/glew.h>
 #include <string>
 
 class Shader {
 public:
-    Shader(const std::string& vertexSource, const std::string& fragmentSource);
+    Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
     ~Shader();
 
-    void CompileAndLink();
-    void Use() const;
-    void SetUniform1f(const std::string& name, float value) const;
-    bool IsCompiled() const;
     void Bind() const;
-    void Unbind() const; // Add this method declaration
-    unsigned int GetRendererID() const;
+    void Unbind() const;
+
+    bool IsCompiled() const { return m_IsCompiled; }
 
 private:
-    unsigned int m_RendererID;
+    GLuint m_ShaderID;
     bool m_IsCompiled;
 
-    void CompileShader(unsigned int shaderID, const std::string& source);
-    void LinkProgram(unsigned int vertexShader, unsigned int fragmentShader);
+    GLuint CompileShader(GLenum type, const std::string& source);
 };

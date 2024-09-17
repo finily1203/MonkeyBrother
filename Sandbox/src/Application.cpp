@@ -2,9 +2,6 @@
 #include <GLFW/glfw3.h>
 #include "GlfwFunctions.h"
 #include <iostream>
-#include "Renderer.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
 #include "Shader.h"
 #include "GraphicsSystem.h"
 
@@ -17,12 +14,13 @@ static void update();
 static void draw();
 static void cleanup();
 
-GraphicsSystem graphics;
+GraphicsSystem graphicsSystem;
 
 int main() {
     monkeybrother::Print();
     init();
-    graphics.Initialize();
+   
+    graphicsSystem.Initialize();
 
     glfwSwapInterval(1); // Enable vertical synchronization
 
@@ -31,7 +29,7 @@ int main() {
         draw();
     }
 
-    graphics.Cleanup();
+   
     cleanup();
 
     return 0;
@@ -73,7 +71,7 @@ static void draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render
-    graphics.Render();
+    graphicsSystem.Render();
 
     // Swap front and back buffers
     glfwSwapBuffers(GLFWFunctions::pWindow);
@@ -95,5 +93,5 @@ static void draw() {
 static void cleanup() {
     GLFWFunctions::glfwCleanup();
     glfwTerminate(); // Ensure GLFW is properly terminated
-    graphics.Cleanup();
+    graphicsSystem.Cleanup();
 }
