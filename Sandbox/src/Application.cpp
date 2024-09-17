@@ -53,13 +53,13 @@ static void init() {
 
     std::cout << "GLEW initialized successfully" << std::endl;
 
-    // Set the viewport to match the window size
+   
     int width, height;
     glfwGetFramebufferSize(GLFWFunctions::pWindow, &width, &height);
     glViewport(0, 0, width, height);
 
     // Set the clear color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black background
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
 }
 
 static void update() {
@@ -67,23 +67,19 @@ static void update() {
 }
 
 static void draw() {
-    // Clear the screen
+   
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Render
     graphicsSystem.Render();
 
-    // Swap front and back buffers
     glfwSwapBuffers(GLFWFunctions::pWindow);
 
-    // Poll for and process events
     glfwPollEvents();
 
-    // Update window title with FPS
     GLFWFunctions::showFPS(GLFWFunctions::pWindow);
     glfwSetWindowTitle(GLFWFunctions::pWindow, std::to_string(GLFWFunctions::fps).c_str());
 
-    // Check for OpenGL errors
+   
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
         std::cerr << "OpenGL Error: " << error << std::endl;
@@ -92,6 +88,6 @@ static void draw() {
 
 static void cleanup() {
     GLFWFunctions::glfwCleanup();
-    glfwTerminate(); // Ensure GLFW is properly terminated
+    glfwTerminate();
     graphicsSystem.Cleanup();
 }
