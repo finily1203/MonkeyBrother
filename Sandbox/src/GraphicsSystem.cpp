@@ -28,29 +28,6 @@ GraphicsSystem& GraphicsSystem::operator=(const GraphicsSystem& other) {
     return *this;
 }
 
-GraphicsSystem::GraphicsSystem(GraphicsSystem&& other) noexcept
-    : m_VAO(other.m_VAO), m_VBO(other.m_VBO), m_Texture(other.m_Texture), m_Shader(std::move(other.m_Shader)) {
-    other.m_VAO = 0;
-    other.m_VBO = 0;
-    other.m_Texture = 0;
-}
-
-GraphicsSystem& GraphicsSystem::operator=(GraphicsSystem&& other) noexcept {
-    if (this != &other) {
-        Cleanup();
-
-        m_VAO = other.m_VAO;
-        m_VBO = other.m_VBO;
-        m_Texture = other.m_Texture;
-        m_Shader = std::move(other.m_Shader);
-
-        other.m_VAO = 0;
-        other.m_VBO = 0;
-        other.m_Texture = 0;
-    }
-    return *this;
-}
-
 void GraphicsSystem::Initialize() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

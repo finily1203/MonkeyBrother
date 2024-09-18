@@ -15,8 +15,6 @@ public:
 
     GraphicsSystem(const GraphicsSystem& other);            
     GraphicsSystem& operator=(const GraphicsSystem& other); 
-    GraphicsSystem(GraphicsSystem&& other) noexcept;        
-    GraphicsSystem& operator=(GraphicsSystem&& other) noexcept; 
 
     // Public methods
     void Initialize();  
