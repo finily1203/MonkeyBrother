@@ -1,3 +1,4 @@
+#include <GL\glew.h>
 #include "GlfwFunctions.h"
 #include <iostream>
 
@@ -22,6 +23,14 @@ bool GLFWFunctions::init(int width, int height, std::string title) {
 
     /* Make the window's context current */
     glfwMakeContextCurrent(GLFWFunctions::pWindow);
+
+    // Check if glew is initialized
+    if (glewInit() != GLEW_OK) {
+        std::cout << "Error!" << std::endl;
+    }
+
+    // Print OpenGL version
+    std::cout << glGetString(GL_VERSION) << std::endl;
     
     callEvents();
 

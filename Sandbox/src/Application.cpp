@@ -26,7 +26,7 @@ int main() {
 }
 
 static void init() {
-    GLFWFunctions::init(1600, 900, "Hello World");
+    GLFWFunctions::init(640, 480, "Hello World");
 }
 
 static void update() {
@@ -48,6 +48,8 @@ static void update() {
     glfwPollEvents();
 
     GLFWFunctions::showFPS(GLFWFunctions::pWindow);
+
+    // Set the window title
     glfwSetWindowTitle(GLFWFunctions::pWindow, std::to_string(GLFWFunctions::fps).c_str());
 }
 
