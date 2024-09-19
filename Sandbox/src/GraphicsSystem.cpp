@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #include "GraphicsSystem.h"
 #include "Shader.h"
 #include <iostream>
@@ -33,28 +35,28 @@ void GraphicsSystem::Initialize() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Shader sources
-    const std::string vertexShaderSource = R"(
+        const std::string vertexShaderSource = R"(
         #version 330 core
         layout(location = 0) in vec3 position;
-        layout(location = 1) in vec2 texCoord;
+        layout(location = 1) in vec2 texCoords;
 
-        out vec2 TexCoord;
+        out vec2 TexCoords; // Pass to fragment shader
 
         void main() {
             gl_Position = vec4(position, 1.0);
-            TexCoord = texCoord;
+            TexCoords = texCoords;
         }
     )";
 
-    const std::string fragmentShaderSource = R"(
+        const std::string fragmentShaderSource = R"(
         #version 330 core
         out vec4 FragColor;
-        in vec2 TexCoord;
 
-        uniform sampler2D u_Texture;
+        in vec2 TexCoords;
+        uniform sampler2D u_Texture; // The texture sampler
 
         void main() {
-            FragColor = texture(u_Texture, TexCoord);
+            FragColor = texture(u_Texture, TexCoords); // Sample the texture
         }
     )";
 
@@ -66,18 +68,22 @@ void GraphicsSystem::Initialize() {
 
     
     float vertices[] = {
-        // Positions         // TexCoords
-        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,  
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f,  
-         0.5f,  0.5f, 0.0f,  1.0f, 1.0f,  
-        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f   
+        // positions          // texture coords
+         0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 
+         0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 
+        -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  
     };
+
+
+
 
     
     unsigned int indices[] = {
-        0, 1, 2,
-        2, 3, 0
+        0, 1, 3,   
+        1, 2, 3   
     };
+
 
     glGenVertexArrays(1, &m_VAO);
     glBindVertexArray(m_VAO);
@@ -87,12 +93,12 @@ void GraphicsSystem::Initialize() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); 
     glEnableVertexAttribArray(0);
 
-    
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // TexCoords
     glEnableVertexAttribArray(1);
+
 
    
     GLuint EBO;
@@ -101,31 +107,39 @@ void GraphicsSystem::Initialize() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     
-    glGenTextures(1, &m_Texture);
-    glBindTexture(GL_TEXTURE_2D, m_Texture);
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true); // disable vertical flip on load
 
-    
-    unsigned char textureData[] = {
-        // Row 1
-        255, 255, 255,   // White
-        0, 0, 0,         // Black
-        255, 255, 255,   // White
-        0, 0, 0,         // Black
+    unsigned char* data = stbi_load("../Assets/moss.png", &width, &height, &nrChannels, 0);
 
-        // Row 2
-        0, 0, 0,         // Black
-        255, 255, 255,   // White
-        0, 0, 0,         // Black
-        255, 255, 255    // White
-    };
+    if (data) {
+        GLenum format;
+        if (nrChannels == 4) {
+            format = GL_RGBA;  
+        }
+        else if (nrChannels == 3) {
+            format = GL_RGB;
+        }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, textureData);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glGenTextures(1, &m_Texture);
+        glBindTexture(GL_TEXTURE_2D, m_Texture);
 
-    glBindVertexArray(0);
+       
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else {
+        std::cerr << "Failed to load texture!" << std::endl;
+        stbi_image_free(data);
+    }
+    glBindTexture(GL_TEXTURE_2D, 0); 
 }
 
 void GraphicsSystem::Update() {
@@ -139,7 +153,7 @@ void GraphicsSystem::Render() {
     glBindTexture(GL_TEXTURE_2D, m_Texture);
 
     glBindVertexArray(m_VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); 
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);  
 
     glBindVertexArray(0);
 
@@ -148,6 +162,8 @@ void GraphicsSystem::Render() {
         std::cerr << "OpenGL error: " << err << std::endl;
     }
 }
+
+
 
 void GraphicsSystem::Cleanup() {
     ReleaseResources();
