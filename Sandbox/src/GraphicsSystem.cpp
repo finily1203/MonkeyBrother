@@ -34,33 +34,8 @@ void GraphicsSystem::Initialize() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // Shader sources
-        const std::string vertexShaderSource = R"(
-        #version 330 core
-        layout(location = 0) in vec3 position;
-        layout(location = 1) in vec2 texCoords;
-
-        out vec2 TexCoords; // Pass to fragment shader
-
-        void main() {
-            gl_Position = vec4(position, 1.0);
-            TexCoords = texCoords;
-        }
-    )";
-
-        const std::string fragmentShaderSource = R"(
-        #version 330 core
-        out vec4 FragColor;
-
-        in vec2 TexCoords;
-        uniform sampler2D u_Texture; // The texture sampler
-
-        void main() {
-            FragColor = texture(u_Texture, TexCoords); // Sample the texture
-        }
-    )";
-
-    m_Shader = std::make_unique<Shader>(vertexShaderSource, fragmentShaderSource);
+    ShaderProgramSource source = Shader::ParseShader("Basic.shader");
+    m_Shader = std::make_unique<Shader>(source.VertexSource, source.FragmentSource);
     if (!m_Shader->IsCompiled()) {
         std::cerr << "Shader compilation failed." << std::endl;
         return;

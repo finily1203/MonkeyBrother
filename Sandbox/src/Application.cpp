@@ -1,7 +1,7 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <GL/glew.h> //To include glew, must include it before glfw3.h
 #include "GlfwFunctions.h"
 #include <iostream>
+#include <GraphicsSystem.h>
 
 #include <fstream>
 #include <string>
@@ -99,7 +99,7 @@ GraphicsSystem graphicsSystem;
 int main() {
     monkeybrother::Print();
     init();
-   
+
     graphicsSystem.Initialize();
 
     glfwSwapInterval(1); // Enable vertical synchronization
@@ -109,56 +109,37 @@ int main() {
         draw();
     }
 
-   
+
     cleanup();
 
     return 0;
 }
 
 static void init() {
-    GLFWFunctions::init(640, 480, "Hello World");
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-    // Vertex Buffer
-    float positions[] = {
-        -0.5f, -0.5f,
-        0.5f,  -0.5f,
-        0.5f,   0.5f,
-        -0.5f,  0.5f
-    };
+    GLFWFunctions::init(1600, 900, "Hello World");
+    glfwMakeContextCurrent(GLFWFunctions::pWindow);
 
-    unsigned int indices[]{
-        0, 1, 2,
-        2, 3, 0
-    };
-
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
-
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-
-    unsigned int ibo;
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-
-    ShaderProgramSource source = ParseShader("Basic.shader");
-    shader = CreateShader(source.VertexSource, source.FragmentSource);
-    glUseProgram(shader);
-}
+    GLenum glewInitResult = glewInit();
+    if (glewInitResult != GLEW_OK) {
+        std::cerr << "Failed to initialize GLEW: " << glewGetErrorString(glewInitResult) << std::endl;
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
 
     std::cout << "GLEW initialized successfully" << std::endl;
 
-   
+
     int width, height;
     glfwGetFramebufferSize(GLFWFunctions::pWindow, &width, &height);
     glViewport(0, 0, width, height);
 
     // Set the clear color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 static void update() {
@@ -166,30 +147,19 @@ static void update() {
 }
 
 static void draw() {
-   
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     graphicsSystem.Render();
 
-    /*glBegin(GL_TRIANGLES);
-    glVertex2f(-0.5f, -0.5f);
-    glVertex2f(0.0f, 0.5f);
-    glVertex2f(0.5f, -0.5f);
-    glEnd();*/
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-    /* Swap front and back buffers */
     glfwSwapBuffers(GLFWFunctions::pWindow);
 
     glfwPollEvents();
 
     GLFWFunctions::showFPS(GLFWFunctions::pWindow);
-
-    // Set the window title
     glfwSetWindowTitle(GLFWFunctions::pWindow, std::to_string(GLFWFunctions::fps).c_str());
 
-   
+
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
         std::cerr << "OpenGL Error: " << error << std::endl;
@@ -197,6 +167,7 @@ static void draw() {
 }
 
 static void cleanup() {
-	GLFWFunctions::glfwCleanup();
-    glDeleteProgram(shader);
+    GLFWFunctions::glfwCleanup();
+    glfwTerminate();
+    graphicsSystem.Cleanup();
 }

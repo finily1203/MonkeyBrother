@@ -1,19 +1,22 @@
 #shader vertex
 #version 330 core
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 texCoords;
 
-layout(location = 0) in vec4 position;
+out vec2 TexCoords; // Pass to fragment shader
 
-void main()
-{
-   gl_Position = position;
-};
+void main() {
+    gl_Position = vec4(position, 1.0);
+    TexCoords = texCoords;
+}
 
 #shader fragment
 #version 330 core
+out vec4 FragColor;
 
-layout(location = 0) out vec4 color;
+in vec2 TexCoords;
+uniform sampler2D u_Texture; // The texture sampler
 
-void main()
-{
-   color = vec4(0.2 , 0.3, 0.8, 1.0);
-};
+void main() {
+    FragColor = texture(u_Texture, TexCoords); // Sample the texture
+}

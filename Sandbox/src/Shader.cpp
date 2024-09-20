@@ -1,6 +1,40 @@
 #include "Shader.h"
 #include <iostream>
 #include <vector>
+#include <string>
+#include <sstream>
+#include <fstream>
+
+ShaderProgramSource Shader::ParseShader(const std::string& filepath) {
+    std::ifstream stream(filepath);
+    if (!stream.is_open()) {
+        std::cout << "Failed to open shader file: " << filepath << std::endl;
+        return { "", "" };  // Return empty if the file can't be opened
+    }
+
+    enum class Shadertype {
+        NONE = -1, VERTEX = 0, FRAGMENT = 1
+    };
+
+    std::string line;
+    std::stringstream ss[2];
+    Shadertype type = Shadertype::NONE;
+    while (getline(stream, line)) {
+        if (line.find("#shader") != std::string::npos) {
+            if (line.find("vertex") != std::string::npos) {
+                type = Shadertype::VERTEX;
+            }
+            else if (line.find("fragment") != std::string::npos) {
+                type = Shadertype::FRAGMENT;
+            }
+        }
+        else
+        {
+            ss[(int)type] << line << '\n';
+        }
+    }
+    return { ss[0].str(), ss[1].str() };
+}
 
 Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
     : m_IsCompiled(false) {
