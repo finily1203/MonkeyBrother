@@ -40,7 +40,6 @@ void GraphicsSystem::Initialize() {
         std::cerr << "Shader compilation failed." << std::endl;
         return;
     }
-
     
     float vertices[] = {
         // positions          // texture coords
@@ -50,15 +49,10 @@ void GraphicsSystem::Initialize() {
         -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  
     };
 
-
-
-
-    
     unsigned int indices[] = {
         0, 1, 3,   
         1, 2, 3   
     };
-
 
     glGenVertexArrays(1, &m_VAO);
     glBindVertexArray(m_VAO);
@@ -67,15 +61,12 @@ void GraphicsSystem::Initialize() {
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-   
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); 
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // TexCoords
     glEnableVertexAttribArray(1);
 
-
-   
     GLuint EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
