@@ -275,7 +275,7 @@ void GraphicsSystem::drawDebugLines(const GLObject& obj) {
     glColor3f(1.0f, 0.0f, 0.0f); // Red color for debug lines
 
 
-    float spriteWidth = obj.scaling.x / 4; // Width of one sprite (assuming 4 columns in the sprite sheet)
+    float spriteWidth = obj.scaling.x / 4; 
     float spriteHeight = obj.scaling.y;     // Height of the sprite
 
 

@@ -59,7 +59,7 @@ public:
         void draw(Shader* shader, const GLuint vao, const GLuint tex) const;
 
     };
-    void drawDebugLines(const GLObject& obj);
+     void drawDebugLines(const GLObject& obj);
 
 private:
     GLuint m_VAO;

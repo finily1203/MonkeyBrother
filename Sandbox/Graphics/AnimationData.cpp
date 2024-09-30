@@ -115,5 +115,3 @@ void AnimationData::TriggerFrameEvents() {
 
     }
 }
-
-
