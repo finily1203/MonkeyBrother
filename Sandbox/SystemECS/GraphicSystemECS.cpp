@@ -66,8 +66,9 @@ void GraphicSystemECS::update(float dt) {
 			transform.position.x += 1.0f * GLFWFunctions::delta_time;
 			graphics.glObject.position = transform.position;
 		}
-
+		graphics.glObject.update(GLFWFunctions::delta_time);
 		graphics.glObject.draw(shader, graphicsSystem.GetVAO(), 0);
+		//glfwSwapBuffers(GLFWFunctions::pWindow);
 	}
 }
 

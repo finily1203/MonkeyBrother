@@ -180,7 +180,7 @@ void WindowSystem::update() {
 
 	GLFWFunctions::getFps(1);
 
-	glfwSwapBuffers(GLFWFunctions::pWindow);
+	//glfwSwapBuffers(GLFWFunctions::pWindow);
 
 	GLenum error = glGetError(); if (error != GL_NO_ERROR) {
 		std::cerr << "OpenGL Error: " << error << std::endl;

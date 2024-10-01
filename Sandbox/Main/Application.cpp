@@ -36,6 +36,7 @@ int main() {
 			DebugSystem::StartLoop(); //Get time for start of gameloop
 
 			engine->updateSystem();
+			glfwSwapBuffers(GLFWFunctions::pWindow);
 
 			DebugSystem::EndLoop(); //Get time for end of gameloop
 			DebugSystem::UpdateSystemTimes(); //Get all systems' gameloop time data

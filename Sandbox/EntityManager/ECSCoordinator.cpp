@@ -59,7 +59,7 @@ void ECSCoordinator::test2() {
 	Entity entity = createEntity();
 	addComponent(entity, TransformComponent{glm::vec2(0.f, 0.f), glm::vec2(0.5f, 0.2f), glm::vec2(0.f, 0.f)});
 	GraphicsComponent gfxComp1{};
-	gfxComp1.glObject.init(glm::vec2(0.f, 0.f), glm::vec2(0.5f, 0.2f), glm::vec2(0.f, 0.f));
+	gfxComp1.glObject.init(glm::vec2(0.f, 0.f), glm::vec2(1.78f, 1.0f), glm::vec2(0.f, 0.f));
 	addComponent(entity, gfxComp1);
 
 	//Entity entity2 = createEntity();
