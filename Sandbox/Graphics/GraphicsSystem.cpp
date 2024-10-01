@@ -3,6 +3,8 @@
 #include "stb_image.h"
 #include <iostream>
 
+#define PI 3.14159265359
+
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCall(x) GLClearError();\
 	x;\
@@ -346,5 +348,25 @@ void GraphicsSystem::drawDebugLines(const GLObject& obj) {
     glVertex2f(rotatedTopLeft.x, rotatedTopLeft.y); // Top left
     glVertex2f(rotatedBottomLeft.x, rotatedBottomLeft.y); // Back to bottom left
 
+    glEnd();
+}
+
+void GraphicsSystem::drawFilledCircle(const GLObject& obj, GLfloat radius) {
+    int i;
+    int triangleAmount = 50; //# of triangles used to draw circle
+
+    //GLfloat radius = 0.8f; //radius
+    GLfloat twicePi = 2.0f * PI;
+
+    glBegin(GL_TRIANGLE_FAN);
+    //green
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(obj.position.x, obj.position.y); // center of circle
+    for (i = 0; i <= triangleAmount; i++) {
+        glVertex2f(
+            obj.position.x + (radius * cos(i * twicePi / triangleAmount)),
+            obj.position.y + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
     glEnd();
 }

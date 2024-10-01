@@ -63,6 +63,7 @@ public:
 
     };
     void drawDebugLines(const GLObject& obj);
+    void drawFilledCircle(const GLObject& obj, GLfloat radius);
 
 private:
     GLuint m_VAO;

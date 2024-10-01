@@ -158,12 +158,14 @@ void WindowSystem::update() {
 	gameObject2.draw(shader, graphicsSystem.GetVAO(), graphicsSystem.GetTexture2());
 
 	if (GLFWFunctions::debug_flag) {
+		graphicsSystem.drawFilledCircle(gameObject, 0.5f);
 		graphicsSystem.drawDebugLines(gameObject);
 		graphicsSystem.drawDebugLines(gameObject2);
 		gameObject.draw(shader, graphicsSystem.GetVAO(), graphicsSystem.GetTexture());
 	}
 	else {
 		gameObject.draw(shader, graphicsSystem.GetVAO(), graphicsSystem.GetTexture());
+		
 	}
 	if (GLFWFunctions::debug_flag) {
 		gameObject2.draw(shader, graphicsSystem.GetVAO(), graphicsSystem.GetTexture2());
