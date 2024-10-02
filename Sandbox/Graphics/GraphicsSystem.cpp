@@ -277,7 +277,7 @@ void GraphicsSystem::GLObject::update(GLdouble time_per_frame) {
         0,               0,              1 };
 
     mdl_xform = Translating * (Rotating * Scaling);
-    mdl_to_ndc_xform = mdl_xform;
+    mdl_to_ndc_xform = NDC * mdl_xform;
 }
 
 void GraphicsSystem::GLObject::draw(Shader* shader, const GLuint vao, const GLuint tex) const {

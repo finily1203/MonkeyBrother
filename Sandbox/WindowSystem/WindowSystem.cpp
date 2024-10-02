@@ -109,9 +109,9 @@ void WindowSystem::initialise() {
 
 	DebugTool->Initialise();
 
-	gameObject.init(glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 1.78f, 1.0f }, glm::vec2{ -0.5f, 0.0f });
+	gameObject.init(glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 1600, 200 }, glm::vec2{ -0.5f, 0.0f });
 	gameObject2.init(glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 1.78f, 1.0f }, glm::vec2{ 0.5f, 0.0f });
-	background.init(glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 8, 2.0f }, glm::vec2{ 0.0f, 0.0f });
+	background.init(glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 6400, 900 }, glm::vec2{ 0.0f, 0.0f });
 	blackBox.init(glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 0.5f, 0.2f }, glm::vec2{ 0.0f, 0.0f });
 	gameObject.is_animated = GL_TRUE;
 	gameObject2.is_animated = GL_TRUE;
@@ -164,7 +164,7 @@ void WindowSystem::update() {
 		gameObject.draw(shader, graphicsSystem.GetVAO(), graphicsSystem.GetTexture());
 	}
 	else {
-		gameObject.draw(shader, graphicsSystem.GetVAO(), graphicsSystem.GetTexture());
+		gameObject.draw(shader, graphicsSystem.GetVAO(), 0);
 		
 	}
 	if (GLFWFunctions::debug_flag) {
